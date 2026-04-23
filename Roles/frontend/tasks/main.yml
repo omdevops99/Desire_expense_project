@@ -1,5 +1,5 @@
 - name: install the nginx
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name: nginx
     state: present
 - name: start nginx
@@ -20,6 +20,7 @@
   ansible.builtin.unarchive:
     src: https://expense-artifacts.s3.amazonaws.com/frontend.zip
     dest: /usr/share/nginx/html
+    remote_src: yes
 
 - name: copy the expense.conf
   ansible.builtin.copy:
