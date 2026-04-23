@@ -1,0 +1,14 @@
+- name: disable the myql
+  ansible.builtin.shell: dnf module disable mysql -y 
+- name: copy mysql repo
+  ansible.builtin.copy:
+    src: mysql.repo
+    dest: /etc/yum.repos.d/mysql.repo
+- name: install mysql server
+  ansible.builtin.shell: dnf install mysql-community-server -y
+
+- name: start mysql service
+  ansible.builtin.systemd:
+    name: mysqld
+    state: restarted
+    enabled: yes      

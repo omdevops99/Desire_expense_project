@@ -1,0 +1,46 @@
+- name: disable node js old version.
+  ansible.builtin.shell: dnf module disable nodejs -y
+
+- name: enable nodejs version 18
+  ansible.builtin.shell: dnf module enable nodejs:18 -y
+
+- name: install nodejs
+  ansible.builtin.yum:
+    name: nodejs
+    state: present
+
+- name: create user
+  ansible.builtin.user:
+    name: expense
+    state: present
+- name: create the folder
+  ansible.builtin.file:
+    src: /app
+    state: directory
+
+- name: download and exgtract the file
+  ansible.builtin.unarchive:
+     src: https://expense-artifacts.s3.amazonaws.com/backend.zip 
+     dest: /app
+  args:
+    chdir: /app
+- name: install the npm
+  ansible.builtin.npm:
+     name: npm
+     state: present
+- name: copy backend.service file
+  ansible.builtin.copy:
+    src: backend.service
+    dest: /etc/systemd/system/backend.service
+
+- name: start backend service
+  ansible.builtin.systemd:
+    name: backend
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+- name: install the mysql client
+  ansible.builtin.shell: dnf module enable mysql -y
+  
+
+
